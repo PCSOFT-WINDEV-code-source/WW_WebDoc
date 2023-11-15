@@ -1,0 +1,116 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : pTAG
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x1aafb71c000c3bcb
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  type_code : 31
+  p_codes :
+   -
+     code : |1+
+      CONSTANTE
+      	// Bornes
+      	CS_MAX = -1
+      	CS_MIN = 99999999
+      	
+      	// Tailles HTML
+      	TAILLE_MAX = 16
+      	TAILLE_MIN = 6
+      FIN
+     type : 720896
+  procedures :
+   -
+     name : TagAjoute
+     procedure_id : 1922956956927882500
+     type_code : 15
+     code : |1-
+      // Résumé : Ajoute un TAG en base
+      // Syntaxe :
+      //[ <Résultat> = ] TagAjoute (<sNomTag>)
+      //
+      // Paramètres :
+      //	sNomTag : Nom du tag
+      // Valeur de retour :
+      // 	Type indéterminé : // 	Aucune
+      //
+      PROCEDURE TagAjoute(sNomTag)
+      
+      HRAZ(Tag)
+      Tag.Mot = sNomTag
+      Tag.Compteur = 1
+      Hajoute(Tag)
+      
+      RENVOYER Tag.IDTag
+     type : 458752
+   -
+     name : TagListe
+     procedure_id : 1922957412194456187
+     type_code : 15
+     code : |1+
+      // Résumé : Retourne la liste des n premiers tags 
+      // Syntaxe :
+      //[ <Résultat> = ] TagListe ( [<nPremier>])
+      //
+      // Paramètres :
+      //	nPremier (valeur par défaut=20) : Nombre de tag à récupérer
+      // Valeur de retour :
+      // 	chaîne : // 	Aucune
+      //
+      PROCEDURE TagListe(nPremier=20)
+      
+      // Variable
+      sListe     est une chaine
+      nNbTag     est un entier
+      nFreqMin   est un entier = CS_MIN
+      nFreqMax   est un entier = CS_MAX
+      nFreq      est un entier
+      xRatio     est un numérique
+      taListeTag est un tableau associatif de entiers
+      tabTrieTag est un tableau de chaines
+      
+      // Parcours des Tags
+      POUR TOUT Tag  
+      	// Compteur de tag
+      	nNbTag++
+      	
+      	// Calcule le min et le max des fréquences
+      	SI Tag.Compteur < nFreqMin ALORS nFreqMin = Tag.Compteur 
+      	SI Tag.Compteur > nFreqMax ALORS nFreqMax = Tag.Compteur 
+      	taListeTag[Tag.Mot] = Tag.Compteur
+      	Ajoute(tabTrieTag,Tag.Mot)
+      	
+      	// A t on atteint la limite ?
+      	Si nNbTag = nPremier ALORS SORTIR
+      FIN
+      
+      // On a la fréquence minimum et la fréquence maximum
+      // On calcule la taille de la police pour chaque tag.
+      xRatio = (TAILLE_MAX - TAILLE_MIN) / (nFreqMax-nFreqMin)
+      
+      // Calcul de la taille pour chaque tag
+      TableauTrie(tabTrieTag,ttCroissant)
+      POUR TOUT ELEMENT sTag DE tabTrieTag
+      	nFreq = taListeTag[sTag]
+      	sListe += [RC] + sTag + TAB + Arrondi(TAILLE_MIN + ((nFreq - nFreqMin) * xRatio))
+      FIN
+      
+      RENVOYER sListe
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_Collection1
+resources :
+ string_res :
+  identifier : 0x1fc5126207a29d0c
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ
